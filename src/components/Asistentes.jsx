@@ -10,7 +10,7 @@ function Asistentes() {
   const [asistentes, setAsistentes] = useState([]);
   const [profesores, setProfesor] = useState();
   const [profesoresCargados, setProfesoresCargados] = useState(false);
-
+  const [asistentesBandera, setAsistentesBandera] = useState(false);
   const [valorSeleccionado, setValorSeleccionado] = useState("");
   const [resultados, setResultados] = useState([]);
   //Paginación
@@ -88,21 +88,23 @@ function Asistentes() {
   };
 
   useEffect(() => {
-    const cargarProfesores = async () => {
-      const q = query(
-        collection(db, "profesores"),
-        where("email", "==", usuarioAuthentication.email)
-      );
-      const st = await getDocs(q);
-      const profe = st.docs.map((prof) => ({
-        ...prof.data(),
-      }));
-      setProfesor(profe);
-      setProfesoresCargados(true);
-    };
-
-    cargarProfesores();
-  }, [usuarioAuthentication]);
+    if (!asistentesBandera) {
+      const cargarProfesores = async () => {
+        const q = query(
+          collection(db, "profesores"),
+          where("email", "==", usuarioAuthentication.email)
+        );
+        const st = await getDocs(q);
+        const profe = st.docs.map((prof) => ({
+          ...prof.data(),
+        }));
+        setProfesor(profe);
+        setProfesoresCargados(true);
+      };
+      cargarProfesores();
+      console.log("Prueba")
+    }
+  });
 
   useEffect(() => {
     if (profesoresCargados) {
@@ -121,10 +123,12 @@ function Asistentes() {
           ...doc.data(),
         }));
         setAsistentes(listaAsistentes);
+        setProfesoresCargados(false);
+        setAsistentesBandera(true);
       };
       obtenerSolicitudes();
     }
-  }, [profesores, usuarioAuthentication.email, profesoresCargados]);
+  });
 
   return (
     <>
