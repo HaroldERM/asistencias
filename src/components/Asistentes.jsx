@@ -14,6 +14,7 @@ function Asistentes() {
   const [valorSeleccionado, setValorSeleccionado] = useState("");
   const [resultados, setResultados] = useState([]);
   //Paginación
+  //Paginación
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const totalPages =
